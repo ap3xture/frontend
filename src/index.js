@@ -3,11 +3,41 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { createBrowserRouter,RouterProvider  } from 'react-router-dom';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Rides from './pages/Rides';
+import RideDetails from './pages/RideDetails';
+
+
+const router = createBrowserRouter([
+  {
+    path:"/",
+    element: <Home/>
+  },
+  {
+    path:"/login",
+    element: <Login/>
+  },
+  {
+    path:"/signup",
+    element: <Signup/>
+  },
+  {
+    path:"/rides",
+    element: <Rides />
+  },
+  {
+    path: "/rides/:rideId",
+    element: <RideDetails /> // Use the component that will handle displaying a specific ride
+  }
+])
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router}/>
   </React.StrictMode>
 );
 
