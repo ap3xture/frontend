@@ -13,7 +13,7 @@ const Login = () => {
         <>
             <header>
         <nav className="navbar">
-          <a className="logo" href="/">Carpooling App<span>.</span></a>
+          <a className="logo" href="/">CarPool PK<span>.</span></a>
           <ul className="menu-links">
             <li><a href="/login">Login</a></li>
             <li><a href="/signup">Signup</a></li>

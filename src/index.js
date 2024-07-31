@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Rides from './pages/Rides';
 import RideDetails from './pages/RideDetails';
+import CreateRide from './pages/CreateRide';
 
 
 const router = createBrowserRouter([
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
   {
     path: "/rides/:rideId",
     element: <RideDetails /> // Use the component that will handle displaying a specific ride
+  },
+  {
+    path:"/rides/create-ride",
+    element: <CreateRide/>
   }
 ])
 

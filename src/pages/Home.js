@@ -9,7 +9,7 @@ const Home = () => {
     <>
     <header>
         <nav className="navbar">
-          <a className="logo" href="/">Carpooling App<span>.</span></a>
+          <a className="logo" href="/">CarPool PK<span>.</span></a>
           <ul className="menu-links">
             <li><a href="/login">Login</a></li>
             <li><a href="/signup">Signup</a></li>
@@ -18,9 +18,9 @@ const Home = () => {
       </header>
       <section className="hero-section">
             <div className="content">
-                <h1>Share<span>.</span> Save<span>.</span> Go Green<span>.</span> Carpooling App<span>.</span></h1>
+                <h1>Share<span>.</span> Save<span>.</span> Go Green<span>.</span> CarPool PK<span>.</span></h1>
                 <p>
-                    Start your journey towards eco-friendly commuting with Carpooling App, where every shared ride means less traffic, lower costs, and a greener planet. Share. Save. Go Green.
+                    Start your journey towards eco-friendly commuting with CarPool PK, where every shared ride means less traffic, lower costs, and a greener planet. Share. Save. Go Green.
                 </p>
                 <button  onClick={() => {
                     navigate("/rides")

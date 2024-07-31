@@ -256,3 +256,24 @@ button:hover {
 .map-container {
   width: 50%;
 }
+
+.search-input {
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  padding: 10px;
+  border-radius: 50px;
+  border: #808080 solid 2px;
+  color: white;
+  background-color: black;
+  transition: 0.3s ease;
+}
+
+.search-input:hover {
+  padding: 15px;
+}
+
+a {
+  color: inherit;
+}

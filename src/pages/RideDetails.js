@@ -5,6 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
 
 const RideDetails = () => {
+
     const travelInfo = {
         terminal: 'Oshodi Way',
         destination: 'Victoria Island',
@@ -65,7 +66,7 @@ const RideDetails = () => {
     <>
     <header>
         <nav className="navbar">
-            <a className="logo" href="/">Carpooling App<span>.</span></a>
+            <a className="logo" href="/">CarPool PK<span>.</span></a>
             <ul className="menu-links">
                 <li><a>Username</a></li>
             </ul>
@@ -84,8 +85,7 @@ const RideDetails = () => {
         ))}
       </tbody>
     </table></div>
-            <div id="map-container" style={{ height: '100vh', width: '50%' }}></div>
-
+            <div id="map-container" style={{ height: '80vh', width: '50%' }}></div>
         </div>
 
     </>
