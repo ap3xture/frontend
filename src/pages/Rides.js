@@ -1,7 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Rides = () => {
     const [query, setQuery] = useState('');
+    const [rides, setRides] = useState([]);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // Check if the user is logged in
+        const token = localStorage.getItem('token');
+        if (!token) {
+            // Redirect to login if no token found
+            navigate('/login');
+        } else {
+            // Fetch rides from the server
+            const fetchRides = async () => {
+                try {
+                    const response = await fetch('http://localhost:3001/rides', {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        setRides(data);
+                    } else {
+                        console.error('Error fetching rides:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Network error:', error);
+                }
+            };
+
+            fetchRides();
+        }
+    }, [navigate]);
 
     // Handle the search button click
     const handleSearch = () => {
@@ -9,11 +43,6 @@ const Rides = () => {
         console.log('Search query:', query);
         // For example, you can call an API to fetch search results
     };
-    const rides = [
-        { id: 1, name: 'John Doe', terminal: 'Terminal A', destination: 'City X', departureTime: '08:00 AM', seatsAvailable: 3 },
-        { id: 2, name: 'Jane Smith', terminal: 'Terminal B', destination: 'City Y', departureTime: '09:30 AM', seatsAvailable: 2 },
-        { id: 3, name: 'Alice Johnson', terminal: 'Terminal C', destination: 'City Z', departureTime: '11:15 AM', seatsAvailable: 1 },
-    ];
 
     return (
         <>
@@ -21,7 +50,8 @@ const Rides = () => {
                 <nav className="navbar">
                     <a className="logo" href="/">CarPool PK<span>.</span></a>
                     <ul className="menu-links">
-                        <li><a>Username</a></li>
+                        <li><a href="/profile">Profile</a></li>
+                        <li><a href="/logout">Logout</a></li>
                     </ul>
                 </nav>
             </header>
@@ -42,33 +72,33 @@ const Rides = () => {
                             </button>
                         </div>
                         <ul>
-                            <li><a>My Rides</a></li>
-                            <li><a href="/rides/"  style={{textDecoration:"none"}}>Avalaible Rides</a></li>
-                            <li><a href="/rides/create-ride" style={{textDecoration:"none"}}>Create Rides</a></li>
+                            <li><a href="/my-rides" style={{textDecoration:"none"}}>My Rides</a></li>
+                            <li><a href="/rides" style={{textDecoration:"none"}}>Available Rides</a></li>
+                            <li><a href="/rides/create-ride" style={{textDecoration:"none"}}>Create Ride</a></li>
                         </ul>
                     </div>
                     <div className="card-content">
                         <div className="ride">
-                            <div class="table-container">
+                            <div className="table-container">
                                 <table>
                                     <thead>
                                         <tr>
                                             <th>Name</th>
                                             <th>Terminal</th>
                                             <th>Destination</th>
-                                            <th>Departure time</th>
+                                            <th>Departure Time</th>
                                             <th>Seats Available</th>
                                             <th>Request Ride</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {rides.map(ride => (
+                                        {rides.map((ride) => (
                                             <tr key={ride.id}>
                                                 <td>{ride.name}</td>
                                                 <td>{ride.terminal}</td>
                                                 <td>{ride.destination}</td>
-                                                <td>{ride.departureTime}</td>
-                                                <td>{ride.seatsAvailable}</td>
+                                                <td>{ride.departure_time}</td>
+                                                <td>{ride.seats_available}</td>
                                                 <td><button>Request</button></td>
                                             </tr>
                                         ))}
@@ -80,8 +110,7 @@ const Rides = () => {
                 </div>
             </section>
         </>
-    )
-}
+    );
+};
 
-
-export default Rides
+export default Rides;

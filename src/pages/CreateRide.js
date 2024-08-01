@@ -1,23 +1,35 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const CreateRide = () => {
     const [name, setName] = useState('');
     const [terminal, setTerminal] = useState('');
     const [destination, setDestination] = useState('');
-    const [date, setDate] = useState('');
+    const [departureTime, setDepartureTime] = useState('');
+    const [arrivalTime, setArrivalTime] = useState('');
     const [seats, setSeats] = useState('');
     const [pricePerSeat, setPricePerSeat] = useState('');
 
     const [nameError, setNameError] = useState('');
     const [terminalError, setTerminalError] = useState('');
     const [destinationError, setDestinationError] = useState('');
-    const [dateError, setDateError] = useState('');
+    const [departureTimeError, setDepartureTimeError] = useState('');
+    const [arrivalTimeError, setArrivalTimeError] = useState('');
     const [seatsError, setSeatsError] = useState('');
     const [pricePerSeatError, setPricePerSeatError] = useState('');
 
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/login');
+        }
+    }, [navigate]);
+
     const validateForm = () => {
         let isValid = true;
-        
+
         if (!name) {
             setNameError('Name is required');
             isValid = false;
@@ -39,11 +51,18 @@ const CreateRide = () => {
             setDestinationError('');
         }
 
-        if (!date) {
-            setDateError('Date is required');
+        if (!departureTime) {
+            setDepartureTimeError('Departure time is required');
             isValid = false;
         } else {
-            setDateError('');
+            setDepartureTimeError('');
+        }
+
+        if (!arrivalTime) {
+            setArrivalTimeError('Arrival time is required');
+            isValid = false;
+        } else {
+            setArrivalTimeError('');
         }
 
         if (!seats || isNaN(seats) || seats <= 0) {
@@ -69,19 +88,27 @@ const CreateRide = () => {
         }
 
         const rideDetails = {
-            name,
-            terminal,
-            destination,
-            date,
-            seats: Number(seats),
-            pricePerSeat: Number(pricePerSeat),
+            start_location: terminal,
+            end_location: destination,
+            departure_time: departureTime,
+            arrival_time: arrivalTime,
+            seats_available: Number(seats),
+            price_per_seat: Number(pricePerSeat),
         };
 
         try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('No token found, redirecting to login');
+                navigate('/login');
+                return;
+            }
+
             const response = await fetch('http://localhost:3001/createRide', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // Include the token in the request header
                 },
                 body: JSON.stringify(rideDetails),
             });
@@ -93,11 +120,13 @@ const CreateRide = () => {
                 setName('');
                 setTerminal('');
                 setDestination('');
-                setDate('');
+                setDepartureTime('');
+                setArrivalTime('');
                 setSeats('');
                 setPricePerSeat('');
             } else {
-                console.error('Error creating ride:', response.statusText);
+                const errorData = await response.json();
+                console.error('Error creating ride:', errorData.error || response.statusText);
             }
         } catch (error) {
             console.error('Network error:', error);
@@ -142,12 +171,20 @@ const CreateRide = () => {
                 <label className="errorLabel">{destinationError}</label>
 
                 <input
-                    value={date}
-                    type="date" // Changed to type="date" for better input experience
-                    onChange={(ev) => setDate(ev.target.value)}
+                    value={departureTime}
+                    type="datetime-local" // Use datetime-local for date and time selection
+                    onChange={(ev) => setDepartureTime(ev.target.value)}
                     className={'inputBox'}
                 />
-                <label className="errorLabel">{dateError}</label>
+                <label className="errorLabel">{departureTimeError}</label>
+
+                <input
+                    value={arrivalTime}
+                    type="datetime-local" // Use datetime-local for date and time selection
+                    onChange={(ev) => setArrivalTime(ev.target.value)}
+                    className={'inputBox'}
+                />
+                <label className="errorLabel">{arrivalTimeError}</label>
 
                 <input
                     value={seats}
