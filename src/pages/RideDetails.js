@@ -1,89 +1,68 @@
-import { useParams, useNavigate } from 'react-router-dom';
-import React, { useEffect, useRef, useState } from 'react';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
 const RideDetails = () => {
+  const { rideId } = useParams(); // Get ride ID from the URL
+  const [ride, setRide] = useState(null);
+  const [error, setError] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
   const navigate = useNavigate();
-  const travelInfo = {
-    terminal: 'Oshodi Way',
-    destination: 'Victoria Island',
-    departure: '3-07-2018 4PM',
-    seats: '2',
-    owner: 'John Doe',
-    contactNumber: '+1234567890',
-  };
-  const mapInstance = useRef(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const storedUsername = localStorage.getItem('username');
+    const token = localStorage.getItem("token");
+    const storedUsername = localStorage.getItem("username");
 
-    if (!token || !storedUsername) {
-      // Redirect to login if not logged in
-      navigate('/login');
+    if (!token) {
+      navigate('/login'); // Redirect to login if no token found
     } else {
       setIsLoggedIn(true);
       setUsername(storedUsername);
-    }
-  }, [navigate]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch route data from TomTom API
-        const response = await axios.get('https://api.tomtom.com/routing/1/calculateRoute/24.8607,67.0011:31.5204,74.3587/json', {
-          params: {
-            key: '1ASqcBUAdcT7XOKVpzGOwxgzXwwGRkGi', // Replace with your TomTom API key
-            computeBestOrder: true,
-            routeType: 'fastest',
-            traffic: false,
-          },
-        });
+      // Fetch ride details from the server
+      const fetchRideDetails = async () => {
+        try {
+          const response = await fetch(`http://localhost:3001/rides/${rideId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
 
-        // Initialize map when component mounts
-        if (!mapInstance.current) {
-          mapInstance.current = L.map('map-container').setView([24.8607, 67.0011], 7);
-
-          // Add tile layer (use any tile layer you prefer)
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 18,
-          }).addTo(mapInstance.current);
-
-          // Draw route on map
-          const routePoints = response.data.routes[0].legs[0].points.map(point => [point.latitude, point.longitude]);
-          L.polyline(routePoints, { color: 'blue', weight: 6 }).addTo(mapInstance.current);
-
-          // Fit map to bounds of the route
-          const bounds = L.latLngBounds(routePoints);
-          mapInstance.current.fitBounds(bounds, { padding: [50, 50] });
+          if (response.ok) {
+            const data = await response.json();
+            setRide(data);
+          } else {
+            console.error('Error fetching ride details:', response.statusText);
+            setError('Error fetching ride details.');
+          }
+        } catch (error) {
+          console.error('Network error:', error);
+          setError('Network error while fetching ride details.');
         }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+      };
 
-    fetchData();
-
-    return () => {
-      // Clean up map instance when component unmounts
-      if (mapInstance.current) {
-        mapInstance.current.remove();
-      }
-    };
-  }, []);
+      fetchRideDetails();
+    }
+  }, [rideId, navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+
     setIsLoggedIn(false);
-    setUsername('');
-    navigate('/login');
+    setUsername("");
+
+    // Redirect to home page after logout
+    navigate('/');
   };
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  if (!ride) {
+    return <div>Loading ride details...</div>;
+  }
 
   return (
     <>
@@ -100,34 +79,29 @@ const RideDetails = () => {
               </>
             ) : (
               <>
-                <li>
-                  <a href="/login">Login</a>
-                </li>
-                <li>
-                  <a href="/signup">Signup</a>
-                </li>
+                <li><a href="/login">Login</a></li>
+                <li><a href="/signup">Signup</a></li>
               </>
             )}
           </ul>
         </nav>
       </header>
-      <div className='main-det'>
-        <div>
-          <table>
-            <tbody>
-              {Object.keys(travelInfo).map((key) => (
-                <tr key={key}>
-                  <td>{key}</td>
-                  <td>{travelInfo[key]}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <section className="ride-details">
+        <h2>Ride Details</h2>
+        <div className="ride-info">
+          <p><strong>Driver Name:</strong> {ride.driver_name}</p>
+          <p><strong>Start Location:</strong> {ride.start_location}</p>
+          <p><strong>End Location:</strong> {ride.end_location}</p>
+          <p><strong>Departure Time:</strong> {ride.departure_time}</p>
+          <p><strong>Arrival Time:</strong> {ride.arrival_time}</p>
+          <p><strong>Seats Available:</strong> {ride.seats_available}</p>
+          <p><strong>Price Per Seat:</strong> {ride.price_per_seat}</p>
+          <p><strong>Status:</strong> {ride.ride_status}</p>
+          <button>Request Ride</button>
         </div>
-        <div id="map-container" style={{ height: '80vh', width: '50%' }}></div>
-      </div>
+      </section>
     </>
   );
-}
+};
 
 export default RideDetails;

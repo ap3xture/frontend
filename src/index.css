@@ -6,11 +6,8 @@ body {
 
 .menu-links {
   list-style-type: none;
-  /* Remove bullets */
   padding: 0;
-  /* Remove padding */
   margin: 0;
-  /* Remove margins */
 }
 
 .navbar button {
@@ -79,7 +76,6 @@ header .navbar {
   font-style: normal;
   text-align: center;
   margin: 0 auto;
-
 }
 
 .hero-section .content button {
@@ -103,14 +99,14 @@ header .navbar {
   color: #808080;
   font-size: 1.2rem;
   border: 2px solid #808080;
-
 }
 
 .hero-section .content span {
   color: #808080;
 }
 
-.login {
+.login,
+.signup {
   display: flex;
   height: 100vh;
   flex-direction: column;
@@ -125,7 +121,8 @@ header .navbar {
   font-style: normal;
 }
 
-.login input {
+.login input,
+.signup input {
   text-decoration: none;
   font-family: "Poppins", sans-serif;
   font-weight: 400;
@@ -139,13 +136,16 @@ header .navbar {
   transition: 0.3s ease;
 }
 
-.login input:hover {
+.login input:hover,
+.signup input:hover {
   padding: 15px;
 }
 
-.login label {
-  color: #808080
+.login label,
+.signup label {
+  color: #808080;
 }
+
 .dashboard {
   display: flex;
   height: 100vh;
@@ -163,7 +163,7 @@ header .navbar {
 }
 
 .card-header ul {
-  list-style-type: none; 
+  list-style-type: none;
   padding: 0;
   margin: 0;
 }
@@ -197,7 +197,7 @@ header .navbar {
 
 .table-container {
   width: 100%;
-  height: calc(100vh - 200px); /* Adjust height as needed */
+  height: calc(100vh - 200px);
   overflow-y: auto;
   margin-top: 10px;
 }
@@ -207,7 +207,8 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
   padding: 8px;
   text-align: left;
   border-bottom: 1px solid #ddd;
@@ -216,7 +217,7 @@ th, td {
 th {
   position: sticky;
   top: 0;
- background-color: black;
+  background-color: black;
   z-index: 1;
 }
 
@@ -235,7 +236,7 @@ button {
 }
 
 button:hover {
-  background-color: #808080
+  background-color: #808080;
 }
 
 .main-det {
@@ -253,6 +254,7 @@ button:hover {
   font-style: normal;
   margin-top: 50px;
 }
+
 .map-container {
   width: 50%;
 }
@@ -276,4 +278,145 @@ button:hover {
 
 a {
   color: inherit;
+}
+.rating {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: white;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+}
+
+.rating h2 {
+  margin-bottom: 20px;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.star {
+  font-size: 2rem;
+  cursor: pointer;
+  color: #808080;
+  transition: color 0.3s;
+}
+
+.star.selected {
+  color: yellow;
+}
+
+.commentBox {
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  margin: 15px auto;
+  padding: 10px;
+  border-radius: 20px;
+  border: #808080 solid 2px;
+  color: white;
+  background-color: black;
+  width: 300px;
+  height: 100px;
+  transition: 0.3s ease;
+}
+
+.submitButton {
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  margin: 15px auto;
+  padding: 10px;
+  border-radius: 50px;
+  border: #808080 solid 2px;
+  color: white;
+  background-color: black;
+  transition: 0.3s ease;
+}
+
+.submitButton:hover {
+  background-color: #808080;
+}
+
+.ride-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: white;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  padding-top: 100px; /* To account for the fixed header */
+}
+
+.ride-details h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #ffffff;
+  text-align: center;
+}
+
+.ride-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 80%;
+  max-width: 600px;
+  padding: 20px;
+  border-radius: 20px;
+  background-color: #1c1c1c;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.ride-info p {
+  font-size: 1.2rem;
+  color: #e0e0e0;
+  margin: 0;
+}
+
+.ride-info p strong {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.ride-info button {
+  align-self: center;
+  font-size: 1rem;
+  margin-top: 20px;
+  padding: 10px 20px;
+  border-radius: 30px;
+  border: 2px solid #808080;
+  color: white;
+  background-color: black;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.ride-info button:hover {
+  background-color: #808080;
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .ride-info {
+    width: 90%;
+  }
+
+  .ride-details h2 {
+    font-size: 2rem;
+  }
+
+  .ride-info p {
+    font-size: 1rem;
+  }
 }

@@ -4,21 +4,22 @@ import { useNavigate } from "react-router-dom";
 const Signup = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [usernameError, setUsernameError] = useState("");
+  const [firstNameError, setFirstNameError] = useState("");
+  const [lastNameError, setLastNameError] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Check if the user is already logged in
     const token = localStorage.getItem("token");
     const storedUsername = localStorage.getItem("username");
 
     if (token && storedUsername) {
       setIsLoggedIn(true);
-      setUsername(storedUsername);
+      setFirstName(storedUsername);
       navigate("/"); // Redirect to home page if already logged in
     }
   }, [navigate]);
@@ -32,11 +33,18 @@ const Signup = () => {
       setEmailError("");
     }
 
-    if (!username) {
-      setUsernameError("Username is required");
+    if (!firstName) {
+      setFirstNameError("First name is required");
       isValid = false;
     } else {
-      setUsernameError("");
+      setFirstNameError("");
+    }
+
+    if (!lastName) {
+      setLastNameError("Last name is required");
+      isValid = false;
+    } else {
+      setLastNameError("");
     }
 
     if (!password) {
@@ -60,18 +68,22 @@ const Signup = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, username, password }),
+        body: JSON.stringify({
+          email,
+          first_name: firstName,
+          last_name: lastName,
+          password,
+        }),
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        // Save the token and username in local storage
         localStorage.setItem("token", result.token);
         localStorage.setItem("username", result.username);
 
         setIsLoggedIn(true);
-        setUsername(result.username);
+        setFirstName(result.username);
         console.log("Signup successful");
         navigate("/"); // Redirect to home page after successful signup
       } else {
@@ -83,12 +95,11 @@ const Signup = () => {
   };
 
   const handleLogout = () => {
-    // Clear the token from local storage
     localStorage.removeItem("token");
     localStorage.removeItem("username");
 
     setIsLoggedIn(false);
-    setUsername("");
+    setFirstName("");
   };
 
   return (
@@ -101,7 +112,7 @@ const Signup = () => {
           <ul className="menu-links">
             {isLoggedIn ? (
               <>
-                <li>{username}</li>
+                <li>{firstName}</li>
                 <li>
                   <button onClick={handleLogout}>Logout</button>
                 </li>
@@ -125,30 +136,37 @@ const Signup = () => {
           value={email}
           placeholder="Enter your email here"
           onChange={(ev) => setEmail(ev.target.value)}
-          className={"inputBox"}
+          className="inputBox"
         />
         <label className="errorLabel">{emailError}</label>
         <input
-          value={username}
-          placeholder="Enter your username here"
-          onChange={(ev) => setUsername(ev.target.value)}
-          className={"inputBox"}
+          value={firstName}
+          placeholder="Enter your first name here"
+          onChange={(ev) => setFirstName(ev.target.value)}
+          className="inputBox"
         />
-        <label className="errorLabel">{usernameError}</label>
+        <label className="errorLabel">{firstNameError}</label>
+        <input
+          value={lastName}
+          placeholder="Enter your last name here"
+          onChange={(ev) => setLastName(ev.target.value)}
+          className="inputBox"
+        />
+        <label className="errorLabel">{lastNameError}</label>
         <input
           type="password"
           value={password}
           placeholder="Enter your password here"
           onChange={(ev) => setPassword(ev.target.value)}
-          className={"inputBox"}
+          className="inputBox"
         />
         <label className="errorLabel">{passwordError}</label>
 
         <input
-          className={"inputButton"}
+          className="inputButton"
           type="button"
           onClick={onButtonClick}
-          value={"Sign up"}
+          value="Sign up"
         />
       </section>
     </>

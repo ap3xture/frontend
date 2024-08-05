@@ -10,6 +10,7 @@ import Signup from './pages/Signup';
 import Rides from './pages/Rides';
 import RideDetails from './pages/RideDetails';
 import CreateRide from './pages/CreateRide';
+import UserRating from './pages/UserRating';
 
 
 const router = createBrowserRouter([
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
   {
     path:"/rides/create-ride",
     element: <CreateRide/>
+  },
+  {
+    path:"/rating/:userId",
+    element:<UserRating/>
   }
 ])
 
